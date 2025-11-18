@@ -273,7 +273,8 @@ impl Connection {
     where
         F: FnOnce(&mut rusqlite::Connection) -> std::result::Result<R, E> + 'static + Send,
         R: Send + 'static,
-        E: Send + 'static,
+        E: Into<Box<dyn std::error::Error + Send + Sync>> + Send + 'static,
+        // E: Send + 'static,
     {
         self.call_raw(function)
             .await
